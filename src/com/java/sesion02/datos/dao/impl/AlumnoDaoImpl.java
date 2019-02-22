@@ -1,6 +1,7 @@
 package com.java.sesion02.datos.dao.impl;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -58,7 +59,31 @@ public class AlumnoDaoImpl implements AlumnoDao{
 
 	@Override
 	public int guardarAlumno(Alumno alumno) {
-		// TODO Auto-generated method stub
+		Conexion conexion = new Conexion();
+		Connection conn = conexion.getConnection();
+		String sql = "Insert into Alumno(nombres, apellidos, codigoAlumno, estado) VALUES(?,?,?,?)";
+		PreparedStatement pstmt = null;
+		
+		try{
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, alumno.getNombres());
+			pstmt.setString(2, alumno.getApellidos());
+			pstmt.setString(3, alumno.getCodigoAlumno());
+			pstmt.setInt(4, alumno.getEstado());
+			
+			pstmt.executeUpdate();
+		}catch(SQLException sqlex){
+			sqlex.printStackTrace();
+		}finally{
+			try{
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch(Exception ex){
+			ex.printStackTrace();
+			}
+		}
+				
+		
 		return 0;
 	}
 
@@ -83,6 +108,14 @@ public class AlumnoDaoImpl implements AlumnoDao{
 			System.out.println(alumno.getNombres());
 			System.out.println(alumno.getApellidos());
 		}
+		
+		Alumno alumno = new Alumno();
+		alumno.setNombres("Conrad");
+		alumno.setApellidos("Leon");
+		alumno.setCodigoAlumno("4");
+		alumno.setEstado(1);
+		
+		dao.guardarAlumno(alumno);
 	}
 
 }
