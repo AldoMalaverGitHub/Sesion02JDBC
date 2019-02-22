@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.java.sesion02.datos.dao.AlumnoDao;
@@ -18,14 +19,19 @@ public class AlumnoDaoImpl implements AlumnoDao{
 		Connection conn = conexion.getConnection();
 		ResultSet rs = null;
 		Statement stmt = null;
+		List<Alumno> listaAlumnos = new ArrayList<>();
 		
 		try{
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery("Select * from Alumno");
 			
 			while(rs.next()){
-				System.out.println(rs.getInt(1));
-				System.out.println(rs.getString(2));
+				Alumno alumno = new Alumno();
+				alumno.setId(rs.getInt(1));
+				alumno.setNombres(rs.getString(2));
+				alumno.setApellidos(rs.getString(3));
+				alumno.setEstado(rs.getInt(4));
+				listaAlumnos.add(alumno);
 			}
 		}catch(SQLException ex){
 			ex.printStackTrace();
@@ -47,7 +53,7 @@ public class AlumnoDaoImpl implements AlumnoDao{
 			}
 			
 		}
-		return null;
+		return listaAlumnos;
 	}
 
 	@Override
@@ -70,7 +76,13 @@ public class AlumnoDaoImpl implements AlumnoDao{
 	
 	public static void main(String[] args){
 		AlumnoDao dao = new AlumnoDaoImpl();
-		dao.listarAlumnos();
+		List<Alumno> listaAlumnos = dao.listarAlumnos();
+		
+		for(Alumno alumno: listaAlumnos){
+			System.out.println(alumno.getId());
+			System.out.println(alumno.getNombres());
+			System.out.println(alumno.getApellidos());
+		}
 	}
 
 }
