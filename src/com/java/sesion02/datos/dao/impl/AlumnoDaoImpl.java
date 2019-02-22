@@ -95,8 +95,31 @@ public class AlumnoDaoImpl implements AlumnoDao{
 
 	@Override
 	public int actualizarAlumno(Alumno alumno) {
-		// TODO Auto-generated method stub
-		return 0;
+		Conexion conexion = new Conexion();
+		Connection conn = conexion.getConnection();
+		String sql = "Update Alumno set nombres = ?, apellidos = ? where id = ?";
+		PreparedStatement pstmt = null;
+		int resultado = 0;
+			
+		try{
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, alumno.getNombres());
+			pstmt.setString(2, alumno.getApellidos());
+			pstmt.setInt(3, alumno.getId());			
+			
+			resultado = pstmt.executeUpdate();
+			
+		}catch(SQLException sqlex){
+			sqlex.printStackTrace();
+		}finally{
+			try{
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch(Exception ex){
+			ex.printStackTrace();
+			}
+		}
+		return resultado;
 	}
 
 	@Override
@@ -115,13 +138,20 @@ public class AlumnoDaoImpl implements AlumnoDao{
 			System.out.println(alumno.getApellidos());
 		}
 		
-		Alumno alumno = new Alumno();
+		/*Alumno alumno = new Alumno();
 		alumno.setNombres("Carmen");
 		alumno.setApellidos("Lezama");
 		alumno.setCodigoAlumno("10");
 		alumno.setEstado(1);
 		
-		System.out.println("Id generado::" + dao.guardarAlumno(alumno));
+		System.out.println("Id generado::" + dao.guardarAlumno(alumno));*/
+		
+		Alumno alumno = new Alumno();
+		alumno.setId(3);
+		alumno.setNombres("Freddy");
+		alumno.setApellidos("Mercury");
+		
+		System.out.println("El resultado es: " + dao.actualizarAlumno(alumno));
 	}
 
 }
