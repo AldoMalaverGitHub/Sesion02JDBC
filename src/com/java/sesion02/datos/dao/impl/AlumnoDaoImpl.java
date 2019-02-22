@@ -63,6 +63,8 @@ public class AlumnoDaoImpl implements AlumnoDao{
 		Connection conn = conexion.getConnection();
 		String sql = "Insert into Alumno(nombres, apellidos, codigoAlumno, estado) VALUES(?,?,?,?)";
 		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int id = 0;
 		
 		try{
 			pstmt = conn.prepareStatement(sql);
@@ -72,6 +74,10 @@ public class AlumnoDaoImpl implements AlumnoDao{
 			pstmt.setInt(4, alumno.getEstado());
 			
 			pstmt.executeUpdate();
+			rs = pstmt.getGeneratedKeys();
+			if(rs.next()){
+				id = rs.getInt(1);
+			}
 		}catch(SQLException sqlex){
 			sqlex.printStackTrace();
 		}finally{
@@ -84,7 +90,7 @@ public class AlumnoDaoImpl implements AlumnoDao{
 		}
 				
 		
-		return 0;
+		return id;
 	}
 
 	@Override
@@ -110,12 +116,12 @@ public class AlumnoDaoImpl implements AlumnoDao{
 		}
 		
 		Alumno alumno = new Alumno();
-		alumno.setNombres("Conrad");
-		alumno.setApellidos("Leon");
-		alumno.setCodigoAlumno("4");
+		alumno.setNombres("Carmen");
+		alumno.setApellidos("Lezama");
+		alumno.setCodigoAlumno("10");
 		alumno.setEstado(1);
 		
-		dao.guardarAlumno(alumno);
+		System.out.println("Id generado::" + dao.guardarAlumno(alumno));
 	}
 
 }
