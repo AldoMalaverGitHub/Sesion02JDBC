@@ -124,8 +124,29 @@ public class AlumnoDaoImpl implements AlumnoDao{
 
 	@Override
 	public int eliminarAlumno(int id) {
-		// TODO Auto-generated method stub
-		return 0;
+		Conexion conexion = new Conexion();
+		Connection conn = conexion.getConnection();
+		String sql = "Delete from Alumno where id = ?";
+		PreparedStatement pstmt = null;
+		int resultado = 0;
+			
+		try{
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, id);						
+			
+			resultado = pstmt.executeUpdate();
+			
+		}catch(SQLException sqlex){
+			sqlex.printStackTrace();
+		}finally{
+			try{
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch(Exception ex){
+			ex.printStackTrace();
+			}
+		}
+		return resultado;
 	}
 	
 	public static void main(String[] args){
@@ -152,6 +173,8 @@ public class AlumnoDaoImpl implements AlumnoDao{
 		alumno.setApellidos("Mercury");
 		
 		System.out.println("El resultado es: " + dao.actualizarAlumno(alumno));
+		
+		System.out.println("El resultado de eliminación es: " + dao.eliminarAlumno(1));
 	}
 
 }
